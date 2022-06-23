@@ -29,9 +29,9 @@ public class User {
 	private String email;
 	
 	@ColumnDefault("'user'")
-	private String role; //Enum을 쓰는게 좋다. Admin, user, manager ->도메인 (범위) 정해진다.
+	private String role;  //Enum을 쓰는게 좋다. Admin, user, manager ->도메인 (범위) 정해진다.
 	
-	@CreationTimestamp //시간 자동 입력
+	@CreationTimestamp   //시간 자동 입력
 	private Timestamp cratedate;
 	
 }
