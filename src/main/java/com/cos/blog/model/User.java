@@ -11,7 +11,17 @@ import javax.persistence.Id;
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.CreationTimestamp;
 
-// ORM ->  Java object - > 테이블로 맵핑해주는 기술 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder //빌더패턴 
+//ORM ->  Java object - > 테이블로 맵핑해주는 기술 
 @Entity // user 클레스가 MySQL에 테이블이 생성
 public class User {
 	
