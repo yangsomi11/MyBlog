@@ -7,7 +7,9 @@ import java.util.function.Supplier;
 import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -28,6 +30,15 @@ public class DummyControllerTest {
 	@Autowired //의존성 주입(DI)
 	private UserRepository userRepository;
 	
+	@DeleteMapping("dummy/user/{id}")
+	public String delete(@PathVariable int id) {
+		try {
+			userRepository.deleteById(id);
+		}catch(EmptyResultDataAccessException e){
+			return "삭제실패 id를 확인 하세요";
+		}
+		return "삭제완료 id : "+id;
+	}
 //	save 함수는 id를 전달하지 않으면 insert 
 //	save 함수는 id를 전달하면 id에대한 데이터가 있으면 update를 해주고
 //	http://localhost:8080/blog/dummy/user	
@@ -47,11 +58,8 @@ public class DummyControllerTest {
 		user.setEmail(requstUser.getEmail());
 //		userRepository.save(user);
 		
-		
-//		requstUser.setId(id);
-//		requstUser.setUsername("sol");
-//		userRepository.save(requstUser);
-		return null; 
+//		더티 체킹
+		return user; 
 	}
 	
 //	http://localhost:8080/blog/dummy/user
