@@ -19,9 +19,6 @@ public class UserApiController {
 	@Autowired
 	private UserService userservice;
 	
-	@Autowired
-	private HttpSession session;
-	
 	@PostMapping("/api/user")
 	public ResponseDto<Integer> save(@RequestBody User user) { //username, password, email
 		System.out.println("UserApiController:save호출");
@@ -33,18 +30,18 @@ public class UserApiController {
 	}
 	
 	//스피링 시큐리티 이용해서 로그인 
-	@PostMapping("api/user/login")
-	public ResponseDto<Integer> login(@RequestBody User user){
-		System.out.println("UserApiController:login호출");
-		
-		User principal = userservice.로그인(user);
-		
-		if(principal != null) {
-			session.setAttribute("principal", principal);
-		}
-		
-		return new ResponseDto<Integer>(HttpStatus.OK.value(),1);//result
-
-	}
+//	@PostMapping("api/user/login")
+//	public ResponseDto<Integer> login(@RequestBody User user,HttpSession session){
+//		System.out.println("UserApiController:login호출");
+//		
+//		User principal = userservice.로그인(user);
+//		
+//		if(principal != null) {
+//			session.setAttribute("principal", principal);
+//		}
+//		
+//		return new ResponseDto<Integer>(HttpStatus.OK.value(),1);//result
+//
+//	}
 	
 }
