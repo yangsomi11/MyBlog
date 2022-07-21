@@ -19,26 +19,9 @@ public class UserService {
 	
 	@Transactional  //트렌젝션을 묶어서 성공, 실패 commit; rollback;
 	public void 회원가입(User user) {
-		
 		userRepository.save(user);
 
-//		try {
-//			userRepository.save(user);
-//			return 1;
-//		}catch (Exception e) {
-//			e.printStackTrace();
-//			System.out.println("UserServic 회원가입() : "+e.getMessage());
-//		
-//		}
-//		return -1;
 	}
 
-	
-	@Transactional(readOnly = true)// select할때 트랜젝션 시작, 해당 서비스 종료시 트렌젝션 종료 (정합성 유지)
-	public User 로그인(User user) {
-		
-		return userRepository.findByUsernameAndPassword(user.getUsername(), user.getPassword());
-
-	}
 	
 }

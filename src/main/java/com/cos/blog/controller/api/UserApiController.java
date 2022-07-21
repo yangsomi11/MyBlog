@@ -19,29 +19,13 @@ public class UserApiController {
 	@Autowired
 	private UserService userservice;
 	
-	@PostMapping("/api/user")
+	@PostMapping("/auth/joinProc")
 	public ResponseDto<Integer> save(@RequestBody User user) { //username, password, email
 		System.out.println("UserApiController:save호출");
 		//실제 DB에 insert하고 아래에서 return
 		user.setRole(RoleType.USER);
-//		int result = userservice.회원가입(user);
 		userservice.회원가입(user);
 		return new ResponseDto<Integer>(HttpStatus.OK.value(),1);//result
 	}
-	
-	//스피링 시큐리티 이용해서 로그인 
-//	@PostMapping("api/user/login")
-//	public ResponseDto<Integer> login(@RequestBody User user,HttpSession session){
-//		System.out.println("UserApiController:login호출");
-//		
-//		User principal = userservice.로그인(user);
-//		
-//		if(principal != null) {
-//			session.setAttribute("principal", principal);
-//		}
-//		
-//		return new ResponseDto<Integer>(HttpStatus.OK.value(),1);//result
-//
-//	}
 	
 }
