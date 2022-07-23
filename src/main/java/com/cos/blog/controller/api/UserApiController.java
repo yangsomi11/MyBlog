@@ -4,6 +4,7 @@ import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -18,12 +19,13 @@ public class UserApiController {
 
 	@Autowired
 	private UserService userservice;
+
 	
 	@PostMapping("/auth/joinProc")
 	public ResponseDto<Integer> save(@RequestBody User user) { //username, password, email
 		System.out.println("UserApiController:save호출");
-		//실제 DB에 insert하고 아래에서 return
-		user.setRole(RoleType.USER);
+		
+
 		userservice.회원가입(user);
 		return new ResponseDto<Integer>(HttpStatus.OK.value(),1);//result
 	}
