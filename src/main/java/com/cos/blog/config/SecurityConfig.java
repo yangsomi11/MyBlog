@@ -2,6 +2,7 @@ package com.cos.blog.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -19,6 +20,15 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
 		return new  BCryptPasswordEncoder();
 	}
 	
+	//시큐리티가 대신 로그인해주는데 password를 가로챌때
+	//해당 password가 뭘로 해쉬가 되서 회원가입이 되었는지 알아야 같은 해쉬로 암호화
+	//같은 해쉬로 암호화 후 DB의 해쉬랑 비교 가능
+	@Override
+	protected void configure(AuthenticationManagerBuilder auth) throws Exception {
+
+		auth.userDetailsService(null).passwordEncoder(encodePWD());
+	}
+	
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
 		http
@@ -30,7 +40,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
 				.authenticated()
 			.and()
 				.formLogin()
-				.loginPage("/auth/loginForm");
+				.loginPage("/auth/loginForm") //인증이 필요하지 않은 페이지
+				.loginProcessingUrl("auth/loginProc")//스프링 시큐리티가 해당 주소로 로그인 가로채서 대신 로그인  
+				.defaultSuccessUrl("/");
 	}		
 	
 }
