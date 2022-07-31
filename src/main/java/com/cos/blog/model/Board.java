@@ -39,7 +39,7 @@ public class Board {
 	@Lob //대용량 데이터
 	private String content; // 섬머노트 라이브러리 <html> 태그 섞여서 디자인.
 	
-	@ColumnDefault("0")
+//	@ColumnDefault("0")
 	private int count; //조회수
 	
 	@ManyToOne(fetch = FetchType.EAGER)  //연관관계 Many = Board , User = One -> 한명에 User에의해 Board생성

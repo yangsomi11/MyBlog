@@ -1,5 +1,6 @@
 package com.cos.blog.config;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -8,12 +9,17 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+
+import com.cos.blog.config.auth.PrincipalDetailService;
 //빈등록 : 스프링 컨테이너에서 객체 관리 가능
 
 @Configuration //빈등록(ioc관리)
 @EnableWebSecurity //시큐리티 필터가 등록된다.
 @EnableGlobalMethodSecurity(prePostEnabled = true)//특정 주소 접근 권한 인증 미리 체크
 public class SecurityConfig extends WebSecurityConfigurerAdapter{
+	
+	@Autowired
+	private PrincipalDetailService principalDetailService;
 	
 	@Bean //IOC 
 	public BCryptPasswordEncoder encodePWD() {
@@ -26,7 +32,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
 	@Override
 	protected void configure(AuthenticationManagerBuilder auth) throws Exception {
 
-		auth.userDetailsService(null).passwordEncoder(encodePWD());
+		auth.userDetailsService(principalDetailService).passwordEncoder(encodePWD());
 	}
 	
 	@Override
@@ -41,7 +47,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
 			.and()
 				.formLogin()
 				.loginPage("/auth/loginForm") //인증이 필요하지 않은 페이지
-				.loginProcessingUrl("auth/loginProc")//스프링 시큐리티가 해당 주소로 로그인 가로채서 대신 로그인  
+				.loginProcessingUrl("/auth/loginProc")//스프링 시큐리티가 해당 주소로 로그인 가로채서 대신 로그인  
 				.defaultSuccessUrl("/");
 	}		
 	
