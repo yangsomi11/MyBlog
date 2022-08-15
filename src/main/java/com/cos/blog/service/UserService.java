@@ -26,6 +26,15 @@ public class UserService {
 	@Autowired
 	private BCryptPasswordEncoder encoder;
 	
+	@Transactional(readOnly = true)
+	public User 회원찾기(String username) {
+		User user = userRepository.findByUsername(username).orElseGet(()->{
+			return new User();
+		});
+		return user;
+	}
+	
+	
 	@Transactional  //트렌젝션을 묶어서 성공, 실패 commit; rollback;
 	public void 회원가입(User user) {
 		
@@ -48,10 +57,13 @@ public class UserService {
 			return new IllegalArgumentException("회원찾기 실패");
 		});
 		
-		String rawPassword = user.getPassword();
-		String encPassword = encoder.encode(rawPassword);
-		persistance.setPassword(encPassword);
-		persistance.setEmail(user.getEmail());
+		//Validate체크 -> oauth값이 없으면 수정 가능
+		if(persistance.getOauth() == null || persistance.getOauth().equals("")) {
+			String rawPassword = user.getPassword();
+			String encPassword = encoder.encode(rawPassword);
+			persistance.setPassword(encPassword);
+			persistance.setEmail(user.getEmail());
+		}
 
 		//회원 수정 합수 종료시 = 서비스 종료 ==> 트렌젝션 종료 commit 자동 
 		//영속화된 persistance객체의 변화감지 시(더티체킹)되어 update 문 날림
