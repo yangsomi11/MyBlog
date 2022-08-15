@@ -1,10 +1,7 @@
 package com.cos.blog.controller;
 
-import java.util.UUID;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.autoconfigure.info.ProjectInfoProperties.Build;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -12,7 +9,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.LinkedMultiValueMap;
@@ -21,7 +17,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.client.RestTemplate;
 
-import com.cos.blog.config.auth.PrincipalDetail;
 import com.cos.blog.model.KakaoProfile;
 import com.cos.blog.model.OAuthToken;
 import com.cos.blog.model.User;
@@ -61,8 +56,8 @@ public class UserController {
 		return "user/updateForm";
 	}
 	
-	@GetMapping("/auth/kakao/callback")
-	public @ResponseBody String kakaoCallback(String code){ //데이터를 리턴해주는 컨트롤러 함수
+	@GetMapping("/auth/kakao/callback")	
+	public String kakaoCallback(String code){ //데이터를 리턴해주는 컨트롤러 함수
 		
 		//POST방식으로 key=value 데이터를 요청(카카오로 전달)
 		//OkHttp
@@ -145,7 +140,6 @@ public class UserController {
 		
 		System.out.println("카카오 아디이: "+ kakaoProfile.getId());
 		System.out.println("카카오 이메일: "+ kakaoProfile.getKakao_account().email);
-
 		System.out.println("블로그 유저네임: "+ kakaoProfile.getKakao_account().email+"_"+kakaoProfile.getId());
 		System.out.println("블로그 이메일:  "+ kakaoProfile.getKakao_account().email);
 //		UUID garbagePassword = UUID.randomUUID();
