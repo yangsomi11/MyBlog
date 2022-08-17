@@ -12,9 +12,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.cos.blog.model.Board;
+import com.cos.blog.model.Reply;
 import com.cos.blog.model.RoleType;
 import com.cos.blog.model.User;
 import com.cos.blog.repository.BoardRepository;
+import com.cos.blog.repository.ReplyRepository;
 import com.cos.blog.repository.UserRepository;
 
 
@@ -25,6 +27,8 @@ public class BoardService {
 	@Autowired
 	private BoardRepository boardRepository;
 	
+	@Autowired
+	private ReplyRepository replyRepositoy;
 	@Transactional 
 	public void 글쓰기(Board board, User user) { //title, content
 		board.setCount(0);
@@ -59,5 +63,19 @@ public class BoardService {
 		board.setTitle(requestBoard.getTitle());
 		board.setContent(requestBoard.getContent());
 		//해당 함수로 종료시에 Service가 종료될때 트렌젝션 종료 ->이떄 더티체킹 - 자동 업데이트 DB flush
+	}
+	
+	@Transactional
+	public void 댓글쓰기(User user, int boardId , Reply requestReply) {
+		
+		Board board = boardRepository.findById(boardId)
+			.orElseThrow(()->{
+				return new IllegalArgumentException("댓글쓰기 실패: 게시글 아이디를 찾을 수 없습니다.");
+			}); //영속화 시키는것 
+		requestReply.setUser(user);
+		requestReply.setBoard(board);
+		
+		replyRepositoy.save(requestReply);
+		
 	}
 }

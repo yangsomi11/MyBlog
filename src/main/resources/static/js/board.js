@@ -8,8 +8,10 @@ let index = {
 		});
 		$("#btn-update").on("click", () => {	
 			this.update();
-		});
-	},
+		});		
+		$("#btn-reply-save").on("click", () => {	
+			this.replySave();
+		});	},
 
 
 	save: function() {
@@ -75,6 +77,32 @@ let index = {
 			alert("글 수정이 완료되었습니다.");
 			console.log(resp);
 			location.href = "/";
+		}).fail(function(error) {
+			alert(JSON.stringify(error));
+
+
+		});
+	},
+	
+	replySave: function() {
+		//alert('user의 save 함수 호출');
+		let data = {
+			content: $("#reply-contnet").val()
+		};
+		let boardId = $("#boardId").val();
+		
+		console.log(data);
+		$.ajax({
+			//댓글 
+			type: "POST",
+			url: `/api/board/${boardId}/reply`,
+			data: JSON.stringify(data), 	
+			contentType: "application/json; charset=utf-8",
+			dataType: "json" 
+		}).done(function(resp) {
+			alert("댓글 작성이 완료되었습니다.");
+			console.log(resp);
+			location.href = `/board/${boardId}`;
 		}).fail(function(error) {
 			alert(JSON.stringify(error));
 
