@@ -11,6 +11,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.cos.blog.dto.ReplySaveRequestDto;
 import com.cos.blog.model.Board;
 import com.cos.blog.model.Reply;
 import com.cos.blog.model.RoleType;
@@ -19,16 +20,17 @@ import com.cos.blog.repository.BoardRepository;
 import com.cos.blog.repository.ReplyRepository;
 import com.cos.blog.repository.UserRepository;
 
+import lombok.RequiredArgsConstructor;
+
 
 //스프링이 컴포넌트 스캔을 통해 Bean에 등록을 해줌 -> Ioc 해줌
 @Service
+@RequiredArgsConstructor
 public class BoardService {
 
-	@Autowired
-	private BoardRepository boardRepository;
+	private final BoardRepository boardRepository;
+	private final ReplyRepository replyRepositoy;
 	
-	@Autowired
-	private ReplyRepository replyRepositoy;
 	@Transactional 
 	public void 글쓰기(Board board, User user) { //title, content
 		board.setCount(0);
@@ -66,16 +68,25 @@ public class BoardService {
 	}
 	
 	@Transactional
-	public void 댓글쓰기(User user, int boardId , Reply requestReply) {
+	public void 댓글쓰기(ReplySaveRequestDto replySaveRequestDto) {
 		
-		Board board = boardRepository.findById(boardId)
-			.orElseThrow(()->{
-				return new IllegalArgumentException("댓글쓰기 실패: 게시글 아이디를 찾을 수 없습니다.");
-			}); //영속화 시키는것 
-		requestReply.setUser(user);
-		requestReply.setBoard(board);
+//		User user = userRepository.findById(replySaveRequestDto.getUserId())
+//				.orElseThrow(()->{
+//					return new IllegalArgumentException("댓글쓰기 실패: 유저 아이디를 찾을 수 없습니다.");
+//		}); //영속화 시키는것 
+//		
+//		Board board = boardRepository.findById(replySaveRequestDto.getBoardId())
+//			.orElseThrow(()->{
+//				return new IllegalArgumentException("댓글쓰기 실패: 게시글 아이디를 찾을 수 없습니다.");
+//		}); //영속화 시키는것
+//		
+//		Reply reply = Reply.builder()
+//				.user(user)
+//				.board(board)
+//				.content(replySaveRequestDto.getContent())
+//				.build();
 		
-		replyRepositoy.save(requestReply);
-		
+		int result = replyRepositoy.mSave(replySaveRequestDto.getUserId(), replySaveRequestDto.getBoardId(), replySaveRequestDto.getContent());
+		System.out.println("BoardService : "+result);
 	}
 }
