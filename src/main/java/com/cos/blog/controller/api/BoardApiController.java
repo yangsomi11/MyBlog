@@ -53,4 +53,11 @@ public class BoardApiController {
 		boardService.댓글쓰기(replySaveRequestDto);
 		return new ResponseDto<Integer>(HttpStatus.OK.value(),1);
 	}
+	
+	@DeleteMapping("/api/board/{boardID}/reply/{replyId}")
+	public ResponseDto<Integer> replyDelete(@PathVariable int replyId){
+		boardService.댓글삭제(replyId);
+		return new ResponseDto<Integer>(HttpStatus.OK.value(),1);
+	}
+	
 }
